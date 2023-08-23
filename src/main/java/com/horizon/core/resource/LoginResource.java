@@ -1,6 +1,5 @@
 package com.horizon.core.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.horizon.core.domain.UserDto;
 import com.horizon.core.infrastructure.supabase.api.AuthorizationApi;
 import com.horizon.core.request.LoginRequest;
@@ -24,7 +23,7 @@ public class LoginResource {
     private AuthorizationApi authorizationApi;
 
     @PostMapping("/signup")
-    public ResponseEntity<LoginResponse> signup(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
+    public ResponseEntity<LoginResponse> signup(@RequestBody LoginRequest loginRequest) {
         UserDto userDto = loginService.getLoginCredentials(loginRequest);
         return new ResponseEntity<>(authorizationApi.signup(userDto), HttpStatus.OK);
     }

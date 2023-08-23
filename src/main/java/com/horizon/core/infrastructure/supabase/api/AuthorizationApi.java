@@ -1,9 +1,8 @@
 package com.horizon.core.infrastructure.supabase.api;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.horizon.core.domain.UserDto;
-import com.horizon.core.infrastructure.supabase.endpoint.SupabaseEndpoint;
+import com.horizon.core.infrastructure.supabase.structure.SupabaseEndpoint;
+import com.horizon.core.infrastructure.supabase.structure.SupabaseHeader;
 import com.horizon.core.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -21,10 +20,10 @@ public class AuthorizationApi {
     @Inject
     private RestTemplate restTemplate;
 
-    public LoginResponse signup(UserDto userDto) throws JsonProcessingException {
+    public LoginResponse signup(UserDto userDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("apikey", supabasePublicKey);
+        headers.add(SupabaseHeader.API_KEY, supabasePublicKey);
 
         String resourceUrl = supabaseServer + SupabaseEndpoint.SIGNUP;
 
