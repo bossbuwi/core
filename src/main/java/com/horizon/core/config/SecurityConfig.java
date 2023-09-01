@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.*;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
@@ -20,9 +22,10 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/auth/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .sessionManagement(sessionConfig -> {
-                    sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                });
+                .sessionManagement(session -> {
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                })
+                .httpBasic(withDefaults());
         return http.build();
     }
 }
