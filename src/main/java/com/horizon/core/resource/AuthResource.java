@@ -17,6 +17,7 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthResource {
+
     @Inject
     private AuthServiceImpl loginService;
     @Inject

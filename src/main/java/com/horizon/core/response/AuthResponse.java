@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthResponse {
+
     @JsonProperty("access_token")
     private String accessToken;
     @JsonProperty("token_type")

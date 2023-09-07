@@ -1,6 +1,6 @@
 package com.horizon.core.security.service.impl;
 
-import com.horizon.core.infrastructure.supabase.api.ProfileApi;
+import com.horizon.core.infrastructure.supabase.api.SupabaseProfileApi;
 import com.horizon.core.response.UserResponse;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,11 +17,11 @@ import java.util.Collection;
 public class UserServiceImpl implements UserDetailsService {
 
     @Inject
-    private ProfileApi profileApi;
+    private SupabaseProfileApi supabaseProfileApi;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserResponse userResponse = profileApi.getUserWithId(username);
+        UserResponse userResponse = supabaseProfileApi.getUserWithId(username);
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_AUTHENTICATED"));

@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import java.net.URI;
 
 @Service
-public class ProfileApi {
+public class SupabaseProfileApi {
 
     @Value("${supabase.publickey}")
     private String supabasePublicKey;

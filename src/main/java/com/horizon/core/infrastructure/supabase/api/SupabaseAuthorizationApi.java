@@ -18,6 +18,7 @@ import java.net.URI;
 
 @Service
 public class SupabaseAuthorizationApi {
+
     @Value("${supabase.publickey}")
     private String supabasePublicKey;
     @Value("${supabase.server}")

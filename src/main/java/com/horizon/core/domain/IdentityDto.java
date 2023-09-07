@@ -9,6 +9,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class IdentityDto {
+
     private String id;
     private UUID userId;
     private IdentityDataDto identityData;

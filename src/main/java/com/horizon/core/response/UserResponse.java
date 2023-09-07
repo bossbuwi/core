@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponse {
+
     @JsonProperty("id")
     private String id;
     @JsonProperty("aud")
