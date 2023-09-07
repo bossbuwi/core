@@ -1,10 +1,8 @@
 package com.horizon.core.infrastructure.supabase.api;
 
 import com.horizon.core.common.HttpStructure;
-import com.horizon.core.domain.UserDto;
 import com.horizon.core.infrastructure.supabase.structure.SupabaseEndpoint;
 import com.horizon.core.infrastructure.supabase.structure.SupabaseHeader;
-import com.horizon.core.response.LoginResponse;
 import com.horizon.core.response.UserResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -18,7 +16,8 @@ import javax.inject.Inject;
 import java.net.URI;
 
 @Service
-public class AuthorizationApi {
+public class ProfileApi {
+
     @Value("${supabase.publickey}")
     private String supabasePublicKey;
     @Value("${supabase.server}")
@@ -26,45 +25,29 @@ public class AuthorizationApi {
     @Inject
     private RestTemplate restTemplate;
 
-    public LoginResponse signup(UserDto userDto) {
+    public UserResponse getUserWithId(String id) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add(SupabaseHeader.API_KEY, supabasePublicKey);
-
-        String resourceUrl = supabaseServer + SupabaseEndpoint.SIGNUP;
-
-        HttpEntity<UserDto> entity = new HttpEntity<>(userDto, headers);
-        ResponseEntity<LoginResponse> response = restTemplate.exchange(
-                resourceUrl,
-                HttpMethod.POST,
-                entity,
-                LoginResponse.class);
-
-        return response.getBody();
-    }
-
-    public LoginResponse login(UserDto userDto) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(SupabaseHeader.API_KEY, supabasePublicKey);
+        headers.add(HttpHeaders.ACCEPT, HttpStructure.ACCEPTS_TYPE);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String queryValue = HttpStructure.PASSWORD;
-        params.add(HttpStructure.GRANT_TYPE, queryValue);
+        String queryValue = "eq." + id;
+        params.add("id", queryValue);
 
-        String resourceUrl = supabaseServer + SupabaseEndpoint.TOKEN;
+        String resourceUrl = supabaseServer + SupabaseEndpoint.PROFILES;
         URI url = UriComponentsBuilder
                 .fromUriString(resourceUrl)
                 .queryParams(params)
                 .build()
                 .toUri();
 
-        HttpEntity<UserDto> entity = new HttpEntity<>(userDto, headers);
-        ResponseEntity<LoginResponse> response = restTemplate.exchange(
+        HttpEntity<Object> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<UserResponse> response = restTemplate.exchange(
                 url,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 entity,
-                LoginResponse.class
+                UserResponse.class
         );
 
         return response.getBody();

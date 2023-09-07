@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class LoginResource {
     @Inject
     private LoginServiceImpl loginService;
@@ -26,5 +26,11 @@ public class LoginResource {
     public ResponseEntity<LoginResponse> signup(@RequestBody LoginRequest loginRequest) {
         UserDto userDto = loginService.getLoginCredentials(loginRequest);
         return new ResponseEntity<>(authorizationApi.signup(userDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        UserDto userDto = loginService.getLoginCredentials(loginRequest);
+        return new ResponseEntity<>(authorizationApi.login(userDto), HttpStatus.OK);
     }
 }
