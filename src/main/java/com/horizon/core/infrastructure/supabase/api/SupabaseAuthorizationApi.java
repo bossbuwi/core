@@ -5,8 +5,14 @@ import com.horizon.core.domain.UserDto;
 import com.horizon.core.infrastructure.supabase.structure.SupabaseEndpoint;
 import com.horizon.core.infrastructure.supabase.structure.SupabaseHeader;
 import com.horizon.core.response.AuthResponse;
+import com.horizon.core.response.UserResponse;
+import com.horizon.core.security.service.impl.UserServiceImpl;
+import com.horizon.core.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -15,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.util.Objects;
 
 @Service
 public class SupabaseAuthorizationApi {
@@ -25,6 +32,10 @@ public class SupabaseAuthorizationApi {
     private String supabaseServer;
     @Inject
     private RestTemplate restTemplate;
+    @Inject
+    private UserServiceImpl userService;
+    @Inject
+    private AuthUtil authUtil;
 
     public AuthResponse signup(UserDto userDto) {
         HttpHeaders headers = new HttpHeaders();
@@ -39,6 +50,12 @@ public class SupabaseAuthorizationApi {
                 HttpMethod.POST,
                 entity,
                 AuthResponse.class);
+
+        UserResponse userResponse = Objects.requireNonNull(response.getBody()).getUser();
+
+        UserDetails userDetails = userService.loadUserByUsername(userResponse.getId());
+        UsernamePasswordAuthenticationToken authenticationToken = authUtil.createToken(userDetails);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         return response.getBody();
     }
@@ -66,6 +83,12 @@ public class SupabaseAuthorizationApi {
                 entity,
                 AuthResponse.class
         );
+
+        UserResponse userResponse = Objects.requireNonNull(response.getBody()).getUser();
+
+        UserDetails userDetails = userService.loadUserByUsername(userResponse.getId());
+        UsernamePasswordAuthenticationToken authenticationToken = authUtil.createToken(userDetails);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         return response.getBody();
     }
